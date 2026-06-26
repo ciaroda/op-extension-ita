@@ -1,14 +1,18 @@
 (() => {
   if (document.getElementById('pfs-sidebar-root')) return;
 
-  const SIDEBAR_WIDTH = '360px';
+  const SIDEBAR_WIDTH = '420px';
 
   // Detect which site we're on
   function detectSite() {
     const host = location.hostname;
     if (host.includes('paizo.com'))         return 'paizo';
     if (host.includes('warhorn.net'))       return 'warhorn';
+    if (host.includes('pathbuilder2e.com')) return 'pathbuilder';
     if (host.includes('rpgchronicles.net')) return 'rpgchronicles';
+    if (host.includes('discord.gg') || host.includes('discord.com')) return 'discord';
+    if (host.includes('t.me') || host.includes('telegram.me')) return 'telegram';
+    if (host.includes('organizedplayitalia.it')) return 'organizedplayitalia';
     return 'generic';
   }
 
@@ -31,6 +35,9 @@
       if (path.includes('register') || path.includes('signup')) return 'register';
       if (path.includes('profile') || path.includes('characters')) return 'profile';
       return 'generic';
+    }
+    if (site === 'pathbuilder') {
+      return 'builder';
     }
     return 'generic';
   }
@@ -79,6 +86,7 @@
     sidebar.classList.toggle('pfs-open', open);
     btn.classList.toggle('pfs-active', open);
     sidebar.setAttribute('aria-hidden', String(!open));
+    chrome.storage.local.set({ pfs_open: open });
     // Push page content
     document.body.style.marginRight = open ? SIDEBAR_WIDTH : '';
     document.body.style.transition = 'margin-right 0.28s ease';
@@ -96,7 +104,4 @@
     if (res.pfs_open) setSidebarOpen(true);
   });
 
-  btn.addEventListener('click', () => {
-    chrome.storage.local.set({ pfs_open: open });
-  });
 })();

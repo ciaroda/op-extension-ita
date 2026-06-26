@@ -1,20 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "Gioco Organizzato Italia – Guida Registrazione",
+  "name": "Gioco Organizzato Italia - Guida Registrazione",
   "short_name": "PFS/SFS Guida",
-  "description": "Guida passo-passo in italiano per la registrazione su Paizo, Warhorn e RPG Chronicles.",
-  "version": "1.0.0",
+  "description": "Guida passo-passo in italiano per Paizo, Warhorn, Pathbuilder, RPG Chronicles e canali social.",
+  "version": "1.1.0",
   "icons": {
-    "16":  "icons/icon16.png",
-    "48":  "icons/icon48.png",
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
   "content_scripts": [
     {
       "matches": [
+        "*://paizo.com/*",
         "*://*.paizo.com/*",
+        "*://warhorn.net/*",
         "*://*.warhorn.net/*",
-        "*://*.rpgchronicles.net/*"
+        "*://pathbuilder2e.com/*",
+        "*://*.pathbuilder2e.com/*",
+        "*://rpgchronicles.net/*",
+        "*://*.rpgchronicles.net/*",
+        "*://discord.gg/*",
+        "*://*.discord.gg/*",
+        "*://discord.com/*",
+        "*://*.discord.com/*",
+        "*://t.me/*",
+        "*://*.t.me/*",
+        "*://telegram.me/*",
+        "*://*.telegram.me/*",
+        "*://organizedplayitalia.it/*",
+        "*://*.organizedplayitalia.it/*"
       ],
       "js": ["content.js"],
       "css": ["sidebar.css"],
@@ -23,8 +38,8 @@
   ],
   "action": {
     "default_icon": {
-      "16":  "icons/icon16.png",
-      "48":  "icons/icon48.png",
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
     "default_title": "PFS/SFS Guida"
@@ -32,11 +47,32 @@
   "permissions": ["storage"],
   "web_accessible_resources": [
     {
-      "resources": ["sidebar.html", "icons/*.png"],
+      "resources": [
+        "sidebar.html",
+        "sidebar.js",
+        "sidebar-panel.css",
+        "icons/*.png",
+        "assets/*.png"
+      ],
       "matches": [
+        "*://paizo.com/*",
         "*://*.paizo.com/*",
+        "*://warhorn.net/*",
         "*://*.warhorn.net/*",
-        "*://*.rpgchronicles.net/*"
+        "*://pathbuilder2e.com/*",
+        "*://*.pathbuilder2e.com/*",
+        "*://rpgchronicles.net/*",
+        "*://*.rpgchronicles.net/*",
+        "*://discord.gg/*",
+        "*://*.discord.gg/*",
+        "*://discord.com/*",
+        "*://*.discord.com/*",
+        "*://t.me/*",
+        "*://*.t.me/*",
+        "*://telegram.me/*",
+        "*://*.telegram.me/*",
+        "*://organizedplayitalia.it/*",
+        "*://*.organizedplayitalia.it/*"
       ]
     }
   ]

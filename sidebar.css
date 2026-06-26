@@ -29,8 +29,8 @@
 #pfs-sidebar {
   position: fixed;
   top: 0;
-  right: -360px;
-  width: 360px;
+  right: -420px;
+  width: 420px;
   height: 100vh;
   z-index: 2147483645;
   background: #fff;
