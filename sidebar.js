@@ -15,13 +15,13 @@ const SITE_LABELS = {
 };
 
 const INTERESTS = [
+  { id: 'inPerson', label: 'Gioco in presenza' },
+  { id: 'online', label: 'Gioco online' },
+  { id: 'joinSession', label: 'Iscrizione a una partita' },
   { id: 'pfs1', label: 'PFS1' },
   { id: 'pfs2', label: 'PFS2' },
   { id: 'sfs1', label: 'SFS1' },
-  { id: 'sfs2', label: 'SFS2' },
-  { id: 'inPerson', label: 'Gioco in presenza' },
-  { id: 'online', label: 'Gioco online' },
-  { id: 'joinSession', label: 'Iscrizione a una partita' }
+  { id: 'sfs2', label: 'SFS2' }
 ];
 
 const INITIAL_STATE = {
@@ -129,20 +129,20 @@ const GUIDE = [
         detail: 'Da fare se vuoi giocare online.'
       },
       {
-        id: 'warhorn-games',
-        number: '2.d',
-        title: 'Visualizzazione partite in programma',
-        optional: true,
-        url: 'https://warhorn.net/games/search?l=it&c=64&c=108',
-        detail: 'Link utile da salvare tra i preferiti.'
-      },
-      {
         id: 'warhorn-session',
-        number: '2.e',
+        number: '2.d',
         title: 'Iscrizione a una sessione di gioco',
         ifInterest: 'joinSession',
         url: 'https://warhorn.net/events/OPO-Italia/schedule/sessions/b2d7d7c0-a866-4741-9524-aac5e7b8261c',
         detail: 'Il link cambia per ogni partita: usa questo solo come esempio del formato.'
+      },
+      {
+        id: 'warhorn-games',
+        number: '2.e',
+        title: 'Visualizzazione partite in programma',
+        optional: true,
+        url: 'https://warhorn.net/games/search?l=it&c=64&c=108',
+        detail: 'Link utile da salvare tra i preferiti.'
       }
     ]
   },
@@ -384,12 +384,12 @@ function renderStep(step) {
 
   const body = el('div', 'step-body');
 
-  const contextMsg = step.context && step.context[site];
+/*   const contextMsg = step.context && step.context[site];
   if (contextMsg) {
     const ctx = withHtml('div', 'context-box', SVG_INFO);
     ctx.append(el('span', null, contextMsg));
     body.append(ctx);
-  }
+  } */
 
   if (step.note) {
     const note = withHtml('div', 'tip', SVG_INFO);
@@ -473,6 +473,11 @@ function updateProgress() {
 
 function render() {
   document.getElementById('site-name').textContent = SITE_LABELS[site] || SITE_LABELS.generic;
+  const siteGuide = GUIDE.find(g => g.context?.[site]);
+  const siteContext = document.getElementById('site-context');
+  if (siteContext) {
+    siteContext.textContent = siteGuide?.context?.[site] || 'Contesto non disponibile';
+  }
   renderInterests();
   renderSteps();
   updateProgress();
