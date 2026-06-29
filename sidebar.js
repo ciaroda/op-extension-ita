@@ -31,7 +31,7 @@ const INITIAL_STATE = {
     sfs1: false,
     sfs2: false,
     inPerson: true,
-    online: true,
+    online: false,
     joinSession: true
   },
   completed: {}
@@ -185,6 +185,24 @@ const GUIDE = [
         optional: true,
         url: 'https://downloads.paizo.com/Iconic+Pregenerated+Characters/Starfinder+2E+Pregens+(CUP28E).zip',
         detail: 'Alternativa rapida alla creazione del personaggio.'
+      },
+      {
+        id: 'pathbuilder-pf2-options',
+        number: '3.a',
+        title: 'Opzioni per i personaggi di Pathfinder Society 2',
+        ifInterest: 'pfs2',
+        optional: true,
+        url: 'https://paizo.com/pathfindersociety/characteroptions',
+        detail: 'Opzioni disponibili per i personaggi di Pathfinder Society 2.'
+      },
+      {
+        id: 'pathbuilder-sf2-options',
+        number: '3.a',
+        title: 'Opzioni per i personaggi di Starfinder Society 2',
+        ifInterest: 'sfs2',
+        optional: true,
+        url: 'https://paizo.com/starfindersociety/characteroptions',
+        detail: 'Opzioni disponibili per i personaggi di Starfinder Society 2.'
       }
     ],
     images: [
@@ -219,9 +237,9 @@ const GUIDE = [
     ]
   },
   {
-    id: 'social',
+    id: 'rules',
     number: '5',
-    title: 'Social e supporto',
+    title: 'Regole e informazioni',
     optional: true,
     context: {
       discord: 'Sei su Discord: entra nel server adatto al modo in cui giochi.',
@@ -231,38 +249,40 @@ const GUIDE = [
     note: 'Canali utili anche per ricevere supporto durante le registrazioni.',
     tasks: [
       {
-        id: 'social-discord-live',
+        id: 'rules-nethys-pf2',
         number: '5.a',
-        title: 'Discord gioco in presenza',
-        ifInterest: 'inPerson',
-        recommended: true,
-        url: 'https://discord.gg/sA7X8EDbj9',
-        detail: 'Raccomandato per chi gioca in presenza.'
+        title: 'Archives of Nethys - Pathfinder 2',
+        ifInterest: 'pfs2',
+        recommended: false,
+        url: 'https://2e.aonprd.com/PlayersGuide.aspx',
+        detail: 'Guida del Giocatore online in inglese per Pathfinder 2E.'
       },
       {
-        id: 'social-discord-online',
-        number: '5.b',
-        title: 'Discord gioco online',
-        ifInterest: 'online',
-        recommended: true,
-        url: 'https://discord.gg/CqyMhUtzjn',
-        detail: 'Raccomandato per chi gioca online.'
+        id: 'rules-nethys-sf2',
+        number: '5.a',
+        title: 'Archives of Nethys - Starfinder 2',
+        ifInterest: 'sfs2',
+        recommended: false,
+        url: 'https://2e.aonsrd.com/players-guide',
+        detail: 'Guida del Giocatore online in inglese per Starfinder 2E.'
       },
       {
-        id: 'social-telegram-live',
+        id: 'rules-lorespire-pfs2',
         number: '5.c',
-        title: 'Telegram gioco in presenza',
+        title: 'Lorespire - Pathfinder Society 2',
+        ifInterest: 'pfs2',
         optional: true,
-        url: 'https://t.me/OrgPlayItaLive',
-        detail: 'Discord e consigliato; Telegram resta disponibile se lo preferisci.'
+        url: 'https://lorespire.paizo.com/#contentguide_selection-1',
+        detail: 'Guida in inglese per Pathfinder Society 2.'
       },
       {
-        id: 'social-site',
-        number: '5.d',
-        title: 'Sito web Organized Play Italia',
+        id: 'rules-lorespire-sfs2',
+        number: '5.c',
+        title: 'Lorespire - Starfinder Society 2',
+        ifInterest: 'sfs2',
         optional: true,
-        url: 'https://www.organizedplayitalia.it/',
-        detail: 'Punto di riferimento pubblico per informazioni e contatti.'
+        url: 'https://lorespire.paizo.com/#contentguide_selection-2',
+        detail: 'Guida in inglese per Starfinder Society 2.'
       }
     ]
   }
@@ -308,6 +328,12 @@ function isTaskRequired(task, step) {
   if (step.conditional && !state.interests[step.conditional]) return false;
   if (task.ifInterest) return Boolean(state.interests[task.ifInterest]);
   return Boolean(task.required || step.required);
+}
+
+function isStepRequired(step) {
+  if (step.required) return true;
+  if (step.conditional === 'online') return Boolean(state.interests.online);
+  return false;
 }
 
 function visibleTasks() {
@@ -375,8 +401,8 @@ function renderStep(step) {
   const text = el('span', 'step-heading');
   text.append(el('span', 'step-title', step.title), el('span', 'step-meta', `${doneCount}/${tasks.length} completati`));
 
-  const badgeLabel = step.required ? 'Obbligatorio' : step.conditional ? 'Obbligatorio se online' : 'Opzionale';
-  const badgeClass = step.required || step.conditional ? 'badge badge-req' : 'badge badge-opt';
+  const badgeLabel = isStepRequired(step) ? 'Obbligatorio' : 'Opzionale';
+  const badgeClass = isStepRequired(step) ? 'badge badge-req' : 'badge badge-opt';
   const badge = el('span', badgeClass, badgeLabel);
   const chev = withHtml('span', 'chev-wrap', SVG_CHEV);
 
@@ -434,7 +460,8 @@ function renderTask(task, step) {
 
   const main = el('div', 'task-main');
   const titleRow = el('div', 'task-title-row');
-  titleRow.append(el('span', 'task-number', task.number), el('strong', null, task.title));
+  // titleRow.append(el('span', 'task-number', task.number), el('strong', null, task.title));
+  titleRow.append(el('strong', null, task.title));
   titleRow.append(el('span', required ? 'mini-badge mini-req' : 'mini-badge', required ? 'Da fare' : task.recommended ? 'Raccomandato' : 'Facoltativo'));
 
   main.append(titleRow, el('p', 'task-detail', task.detail));
