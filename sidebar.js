@@ -155,6 +155,24 @@ const GUIDE = [
     note: 'Opzionale, ma comodo per creare personaggi PF2/SF2. Le versioni Android e Mac non gestiscono Starfinder 2.',
     tasks: [
       {
+        id: 'pathbuilder-pf2-pregen',
+        number: '3.a',
+        title: 'Pregenerati Pathfinder 2',
+        ifInterest: 'pfs2',
+        optional: true,
+        url: 'https://downloads.paizo.com/Iconic+Pregenerated+Characters/Pathfinder+2E+Remaster+Pregens+(CUP27E).zip',
+        detail: 'Alternativa rapida alla creazione del personaggio.'
+      },
+      {
+        id: 'pathbuilder-sf2-pregen',
+        number: '3.a',
+        title: 'Pregenerati Starfinder 2',
+        ifInterest: 'sfs2',
+        optional: true,
+        url: 'https://downloads.paizo.com/Iconic+Pregenerated+Characters/Starfinder+2E+Pregens+(CUP28E).zip',
+        detail: 'Alternativa rapida alla creazione del personaggio.'
+      },
+      {
         id: 'pathbuilder-open',
         number: '3',
         title: 'Apri Pathbuilder',
@@ -169,22 +187,6 @@ const GUIDE = [
         optional: true,
         url: 'https://pathbuilder2e.com/',
         detail: 'Per giocatori neofiti: New Character, poi Core Only nella schermata iniziale.'
-      },
-      {
-        id: 'pathbuilder-pf2-pregen',
-        number: '3.a',
-        title: 'Pregenerati Pathfinder 2',
-        optional: true,
-        url: 'https://downloads.paizo.com/Iconic+Pregenerated+Characters/Pathfinder+2E+Remaster+Pregens+(CUP27E).zip',
-        detail: 'Alternativa rapida alla creazione del personaggio.'
-      },
-      {
-        id: 'pathbuilder-sf2-pregen',
-        number: '3.a',
-        title: 'Pregenerati Starfinder 2',
-        optional: true,
-        url: 'https://downloads.paizo.com/Iconic+Pregenerated+Characters/Starfinder+2E+Pregens+(CUP28E).zip',
-        detail: 'Alternativa rapida alla creazione del personaggio.'
       },
       {
         id: 'pathbuilder-pf2-options',
@@ -389,8 +391,10 @@ function renderStep(step) {
   const tasks = step.tasks.filter(isTaskVisible);
   if (!tasks.length) return null;
 
+  const cardVisible = step.id == site;
+
   const doneCount = tasks.filter(task => state.completed[task.id]).length;
-  const card = el('section', 'step');
+  const card = el('section', cardVisible ? 'step active' : 'step');
   card.id = `step-${step.id}`;
 
   const header = el('button', 'step-head');
@@ -408,7 +412,7 @@ function renderStep(step) {
 
   header.append(num, text, badge, chev);
 
-  const body = el('div', 'step-body');
+  const body = el('div', cardVisible ? 'step-body visible' : 'step-body');
 
 /*   const contextMsg = step.context && step.context[site];
   if (contextMsg) {
