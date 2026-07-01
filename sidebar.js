@@ -1,5 +1,6 @@
 const params = new URLSearchParams(location.search);
 const site = params.get('site') || 'generic';
+const page = params.get('page') || 'generic';
 
 const STORAGE_KEY = 'pfs_onboarding_v2';
 
@@ -43,7 +44,7 @@ const GUIDE = [
     number: '1',
     title: 'Paizo',
     required: true,
-    context: { paizo: 'Sei su Paizo: completa account, Organized Play e i personaggi dei sistemi che ti interessano.' },
+    context: { paizo: 'Sei su Paizo: completa l\'account, Organized Play e i personaggi dei sistemi che ti interessano.' },
     note: 'Il numero Organized Play ricevuto su Paizo ti servira su Warhorn, RPG Chronicles e ai tavoli.',
     tasks: [
       {
@@ -52,7 +53,7 @@ const GUIDE = [
         title: 'Registrazione account Paizo',
         required: true,
         url: 'https://paizo.com/cgi-bin/WebObjects/Store.woa/wa/DirectAction/signIn?path=organizedplay/myAccount',
-        detail: 'Crea o accedi all account Paizo.'
+        detail: 'Crea o accedi all\'account Paizo.'
       },
       {
         id: 'paizo-op',
@@ -101,7 +102,7 @@ const GUIDE = [
     number: '2',
     title: 'Warhorn',
     required: true,
-    context: { warhorn: 'Sei su Warhorn: crea l account, registrati agli eventi corretti e poi scegli la sessione.' },
+    context: { warhorn: 'Sei su Warhorn: crea l\'account, registrati agli eventi corretti e poi scegli la sessione.' },
     note: 'Warhorn e la piattaforma dove trovi gli eventi e ti prenoti alle partite.',
     tasks: [
       {
@@ -110,7 +111,7 @@ const GUIDE = [
         title: 'Creazione account',
         required: true,
         url: 'https://warhorn.net/signup',
-        detail: 'Crea l account e completa il profilo.'
+        detail: 'Crea l\'account e completa il profilo.'
       },
       {
         id: 'warhorn-live',
@@ -217,7 +218,7 @@ const GUIDE = [
     number: '4',
     title: 'RPG Chronicles',
     conditional: 'online',
-    context: { rpgchronicles: 'Sei su RPG Chronicles: crea l account e registra il PG alla sessione quando richiesto.' },
+    context: { rpgchronicles: 'Sei su RPG Chronicles: crea l\'account e registra il PG alla sessione quando richiesto.' },
     note: 'Obbligatorio per il gioco online, facoltativo per il gioco in presenza.',
     tasks: [
       {
@@ -468,7 +469,9 @@ function renderTask(task, step) {
   titleRow.append(el('strong', null, task.title));
   titleRow.append(el('span', required ? 'mini-badge mini-req' : 'mini-badge', required ? 'Da fare' : task.recommended ? 'Raccomandato' : 'Facoltativo'));
 
-  main.append(titleRow, el('p', 'task-detail', task.detail));
+  const taskDetail = el('p', 'task-detail', task.detail);
+  taskDetail.id = `task-detail-${task.id}`;
+  main.append(titleRow, taskDetail);
 
   const actions = el('div', 'btn-row');
   const link = document.createElement('a');
@@ -494,6 +497,59 @@ function renderSteps() {
   });
 }
 
+function applyContext() {
+  if (site === 'paizo') {
+      if (page === 'register') {
+        const target = Array.from(document.querySelectorAll('button'))
+          .find(el => el.textContent.trim() === 'Create New Account'); // cambia col selettore giusto
+        if (target) {
+          const rect = target.getBoundingClientRect();
+          const overlay = document.createElement('div');
+
+          overlay.style.position = 'fixed';
+          overlay.style.left = `${rect.left + window.scrollX}px`;
+          overlay.style.top = `${rect.top + window.scrollY}px`;
+          overlay.style.width = `${rect.width}px`;
+          overlay.style.height = `${rect.height}px`;
+          overlay.style.border = '3px solid blue';
+          overlay.style.zIndex = '999999';
+          overlay.style.pointerEvents = 'none';
+          overlay.style.boxSizing = 'border-box';
+
+          document.body.appendChild(overlay);
+        }
+      };
+      if (page === 'organized') {
+
+      };
+      if (page === 'login') {
+
+      };
+    }
+    if (site === 'warhorn') {
+      if (page === 'register') {
+        
+      }
+      if (page === 'profile') {
+        
+      }
+      if (page === 'login') {
+        
+      }
+    }
+    if (site === 'rpgchronicles') {
+      if (page === 'register') {
+        
+      }
+      if (page === 'profile') {
+        
+      }
+    }
+    if (site === 'pathbuilder') {
+      
+    }
+}
+
 function updateProgress() {
   const required = requiredTasks();
   const done = required.filter(({ task }) => state.completed[task.id]).length;
@@ -511,6 +567,7 @@ function render() {
   }
   renderInterests();
   renderSteps();
+  applyContext();
   updateProgress();
 }
 

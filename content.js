@@ -20,7 +20,8 @@
   function detectPage(site) {
     const path = location.pathname + location.search;
     if (site === 'paizo') {
-      if (path.includes('create') || path.includes('register')) return 'register';
+      // if (path.includes('create') || path.includes('register')) return 'register';
+      if (path.includes('signIn')) return 'register';
       if (path.includes('organizedPlay') || path.includes('organized-play')) return 'organized';
       if (path.includes('signin') || path.includes('login')) return 'login';
       return 'generic';
